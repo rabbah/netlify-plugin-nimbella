@@ -79,7 +79,7 @@ memory = 256 # Function memory limit in MB.
 timeout = 6000 # Function timeout limit in milliseconds.
 ```
 
-#### Understanding your Nimbella Project
+## Understanding your Nimbella Project
 
 The Nimbella add-on for Netlify allows you to use [Nimbella projects](https://nimbella.io/downloads/nim/nim.html#overview-of-nimbella-projects-actions-and-deployment) to automate packaging and deployment. We suggest reading the documentation about [Nimbella projects](https://nimbella.io/downloads/nim/nim.html#overview-of-nimbella-projects-actions-and-deployment) at some point. We provide a quick introduction here.
 
@@ -106,7 +106,16 @@ site
 
 The APIs are `auth/login`, `auth/logout`, `todos/create`, and so on. An API may be a single file, or built from a set of files within an enclosing directory. You may mix languages, and deploy functions as source, without even building languages that require compilation. To API end point for any of the actions is constructed in the same way. For example the serverless API implemented by `auth/login/index.js` is invoked with the REST end point `https://your-site.com/api/auth/login`.
 
-## Examples
+## Exporting Environment Variables to Serverless APIs
+
+If your serverless APIs require environment variables, you have to export the variables explicitly in the `plugins.input` section of the `netlify.toml` file. This is to avoid exporting the entire environment to your APIs, and instead selecting exporting only the variables the actions need access to.
+
+```toml
+[plugins.inputs]
+env = ['ENV_ONE', 'ENV_TWO']
+```
+
+## Example Projects
 
 These are few sites that use `netlify-plugin-nimbella` to deploy frontend content to Netlify and functions on Nimbella.
 

@@ -194,6 +194,42 @@ describe('onBuild()', () => {
       `nim project deploy . --exclude=web`
     )
   })
+
+  test('should export .env file', async () => {
+    process.env.NIMBELLA_LOGIN_TOKEN = 'somevalue'
+    process.env.CONTEXT = 'production'
+    process.env.ENV1 = 'env1value'
+    process.env.ENV2 = 'env2value'
+
+    const pluginInputs = {
+      utils,
+      constants: {CONFIG_PATH: './netlify.toml', PUBLISH_DIR: ''},
+      inputs: {
+        path: '',
+        env: ['ENV1', 'ENV2']
+      }
+    }
+
+    mockFs({
+      packages: {}
+    })
+    await plugin.onPreBuild(pluginInputs)
+    await plugin.onBuild(pluginInputs)
+    const redirects = String(fs.readFileSync('.env')).trim().split('\n')
+    mockFs.restore()
+
+    expect(redirects[0]).toEqual('ENV1 = env1value')
+    expect(redirects[1]).toEqual('ENV2 = env2value')
+    expect(console.log.mock.calls[0][0]).toEqual(
+      `Forwarding environment variables:`
+    )
+    expect(console.log.mock.calls[1][0]).toEqual(`\t- ENV1`)
+    expect(console.log.mock.calls[2][0]).toEqual(`\t- ENV2`)
+
+    expect(utils.run.command.mock.calls[1][0]).toEqual(
+      `nim project deploy . --exclude=web`
+    )
+  })
 })
 
 describe('onPostBuild()', () => {

@@ -103,9 +103,19 @@ module.exports = {
     isProject = existsSync('packages')
   },
   // Build and deploy the Nimbella project
-  onBuild: async ({utils}) => {
+  onBuild: async ({utils, inputs}) => {
     if (process.env.CONTEXT === 'production') {
       if (isProject) {
+        if (inputs.env && inputs.env.length > 0) {
+          console.log('Forwarding environment variables:')
+          let envVars = ''
+          inputs.env.forEach((env) => {
+            console.log(`\t- ${env}`)
+            envVars += `\n${env} = ${process.env[env]}`
+          })
+          await appendFile('.env', envVars)
+        }
+
         try {
           await deployProject(utils.run)
         } catch (error) {
