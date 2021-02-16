@@ -67,23 +67,22 @@ Once your add-on is configured, you need to add the Nimbella Build Plugin to You
 package = "netlify-plugin-nimbella"
 ```
 
-You may provide additional configuration in the `netlify.toml` file to configure the `memory` resources available to your serverless APIs, the maximum duration (`timeout`), or to configure the API `path` prefix for your project. The plugin input configuration is optional, however you will want to set the API `path` to avoid CORS issues between your frontend and backend components of your cloud application.
+You may provide additional configuration in the `netlify.toml` file. The plugin input configuration is optional, however you will want to at least set the API `path` to avoid CORS issues between your frontend and backend components of your cloud application.
 
 ```toml
 [[plugins]]
 package = "netlify-plugin-nimbella"
 
 [plugins.inputs]
-path = "/api" # The prefix path to access your deployed packages.
-memory = 256 # Function memory limit in MB.
-timeout = 6000 # Function timeout limit in milliseconds.
+path    = "/api"   # The prefix path to access your deployed packages.
+env     = []       # Environment variables to export to serverless APIs.
 ```
 
 ## Understanding your Nimbella Project
 
 The Nimbella add-on for Netlify allows you to use [Nimbella projects](https://nimbella.io/downloads/nim/nim.html#overview-of-nimbella-projects-actions-and-deployment) to automate packaging and deployment. We suggest reading the documentation about [Nimbella projects](https://nimbella.io/downloads/nim/nim.html#overview-of-nimbella-projects-actions-and-deployment) at some point. We provide a quick introduction here.
 
-Nimbella projects inspect a directory named `packages` at the base of your repository. The contents of this directory dictate the serverless APIs that are deployed. The plugin will automatically deploy each API inside the `packages` directory. We use the term `action` to be synomous with serverless API (or serverless function). Each API can accessed using the following pattern: `https://your-site.com/<path(default="api")>/<packageName>/<actionName>`.
+Nimbella projects inspect a directory named `packages` at the base of your repository. The contents of this directory dictate the serverless APIs that are deployed. The plugin will automatically deploy each API inside the `packages` directory. We use the term `action` to be synonymous with serverless API (or serverless function). Each API can accessed using the following pattern: `https://your-site.com/<path(default="api")>/<packageName>/<actionName>`.
 
 For example, for the following project structure:
 
@@ -112,6 +111,7 @@ If your serverless APIs require environment variables, you have to export the va
 
 ```toml
 [plugins.inputs]
+# Export specified environment variables to the serverless APIs
 env = ['ENV_ONE', 'ENV_TWO']
 ```
 
