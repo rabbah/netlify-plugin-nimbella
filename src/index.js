@@ -114,7 +114,13 @@ module.exports = {
       }
     }
 
-    deployWeb = (inputs.web || '').toLowerCase() === 'true'
+    deployWeb = false
+    if (typeof inputs.web === 'boolean') {
+      deployWeb = inputs.web
+    } else if (typeof inputs.web === 'string') {
+      deployWeb = inputs.web.toLowerCase() === 'true'
+    }
+
     isProject = existsSync('packages') || (deployWeb && existsSync('web'))
   },
   // Build and deploy the Nimbella project
